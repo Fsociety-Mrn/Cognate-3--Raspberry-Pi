@@ -1,11 +1,11 @@
 import pyrebase 
-
+import os
 # firebase API keys
 config = {
-  "apiKey": "AIzaSyDpvmg1-0z6oK6qc2Mh3LwJy68vJ9dolbg",
-  "authDomain": "cognate-3-raspberrypi.firebaseapp.com",
+  "apiKey": os.environ.get("apiKey"),
+  "authDomain": os.environ.get("authDomain"),
   "databaseURL": "https://cognate-3-raspberrypi-default-rtdb.asia-southeast1.firebasedatabase.app",
-  "storageBucket": "cognate-3-raspberrypi.appspot.com"
+  "storageBucket": os.environ.get("storageBucket")
 }
 firebase = pyrebase.initialize_app(config)
 db = firebase.database() #realTime database
