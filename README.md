@@ -5,3 +5,6 @@
 pip install pipreqs
 ```
 ## open the folder and run main.py
+
+pip freeze > requirements.txt
+pip reqs .
