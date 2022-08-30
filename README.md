@@ -1,4 +1,7 @@
 # Cognate-3--Raspberry
 
-### download this repository
-### open the folder and run main.py
+## Download this pipreqs using this command
+```shell
+pip install pipreqs
+```
+## open the folder and run main.py
