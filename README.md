@@ -1,2 +1,4 @@
 # Cognate-3--Raspberry
-wait
+
+## download this repository
+## open the folder and run main.py
