@@ -1,2 +1,3 @@
 # Raspberry Python Script
-wait.....
+
+run the main.py
