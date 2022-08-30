@@ -5,7 +5,7 @@ from Firebase.firebase import firebaseUpdate,firebaseRead
 # keyValue = name ng current value
 # use this function if you want to update the 
 # return a boolean function
-print(firebaseUpdate("Example","test"))
+print(firebaseUpdate("Example","OO GUMAGANA"))
 
 # firebaseRead(keyValue) 
 # keyValue = name ng current value
