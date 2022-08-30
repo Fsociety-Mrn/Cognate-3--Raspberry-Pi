@@ -1,5 +1,9 @@
 # main file 
 from Firebase.firebase import firebaseUpdate,firebaseRead
+import qrcode
+img = qrcode.make('Some data here')
+type(img)  # qrcode.image.pil.PilImage
+img.save("some_file.png")
 
 # firebaseUpdate(keyValue,value) 
 # keyValue = name ng current value
