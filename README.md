@@ -1,5 +1,20 @@
 # Cognate-3--Raspberry
 
+```shell
+pip install pipreqs
+```
+
+```shell
+pip install Pyrebase4
+```
+
+```shell
+pip install python-dotenv
+```
+
+
+
+
 ## Download this pipreqs using this command
 ```shell
 pip install pipreqs
