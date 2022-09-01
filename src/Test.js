@@ -1,8 +1,19 @@
-import { Grid, Switch, Typography , Stack} from '@mui/material'
-import React, { useState } from 'react'
+import { Grid, Switch, Typography , Stack, Button} from '@mui/material'
+import { onValue, ref } from 'firebase/database'
+import React, { useEffect, useState } from 'react'
+import { readReal,updateReal, createReal, database } from './firebase/Firebase_Real'
+
 
 const Test = () => {
-const [checked, setChecked] = useState(false)
+const [checked, setChecked] = useState(Boolean)
+
+// state for switch
+useEffect(() => {
+  onValue(ref(database , '/LED'), e => {
+    setChecked(()=>e.child("turnOn").val()) 
+  })
+},[database]);
+
   return (
     <div>
         
@@ -11,7 +22,7 @@ const [checked, setChecked] = useState(false)
         direction="row"
         justifyContent="center"
         alignItems="center"
-        padding={15}
+        paddingTop={15}
         >
             <Stack
             direction="column"
@@ -26,8 +37,14 @@ const [checked, setChecked] = useState(false)
                 <Switch 
                 checked={checked}
                 onChange={e=>{
-                    setChecked(!checked)
-                    console.log(!checked)
+                    
+                   
+                    updateReal("LED",{
+                      turnOn: !checked
+                    });
+                    
+                    
+                    // createReal()
                     }
                 }
                 inputProps={{ 'aria-label': 'controlled' }}

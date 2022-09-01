@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,
-  databaseURL: process.env.databaseURL,
+  databaseURL: "https://cognate-3-raspberrypi-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: process.env.projectId,
   storageBucket: process.env.storageBucket,
   messagingSenderId: process.env.messagingSenderId,
