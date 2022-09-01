@@ -14,6 +14,10 @@ db = firebase.database() #realTime database
 def firebaseRead(keyName):
     return db.child(keyName).get().val()
 
+# read the specific data with child
+def firebaseReadChild(keyName,valueName):
+    return db.child(keyName).child(valueName).get().val()
+
 # update the current data
 def firebaseUpdate(keyName, value):
     try:
