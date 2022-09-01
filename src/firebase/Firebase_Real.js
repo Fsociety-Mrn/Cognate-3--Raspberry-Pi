@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, get, child, onValue, update } from "firebase/database";
+import { getDatabase, ref, set, onValue, update } from "firebase/database";
 import { app } from './firebase'
 
 // Initialize Realtime Database and get a reference to the service
