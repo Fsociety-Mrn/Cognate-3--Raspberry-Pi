@@ -21,7 +21,7 @@ then run the
 
 ## NOTE:
 
-please make a simple light switch on raspberry use this [ Link ](https://cognate-3-raspberrypi.web.app/)
+please make a simple light switch on raspberry and click this [ Link ](https://cognate-3-raspberrypi.web.app/) this is a demo website.
 
 
 
