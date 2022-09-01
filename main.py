@@ -11,7 +11,7 @@ from Firebase.firebase import firebaseUpdate,firebaseRead,firebaseReadChild
 # firebaseRead(keyValue) 
 # keyValue = name ng current value
 # use this function if you want to read a specific keyName
-
+#
 
 # print(firebaseRead("Example"))
 
