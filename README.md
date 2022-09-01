@@ -1,5 +1,7 @@
 # Cognate-3--Raspberry
 
+pip install the necessary packages
+
 ```shell
 pip install pipreqs
 ```
@@ -12,8 +14,11 @@ pip install Pyrebase4
 pip install python-dotenv
 ```
 
+then run the 
+### main.py
 
 
+# IGNORE THIS COMMENT FOR THE MEANTIME
 
 ## Download this pipreqs using this command
 ```shell
