@@ -18,6 +18,15 @@ then run the
 ### main.py
 
 
+
+## NOTE:
+
+please make a simple light switch on raspberry use this [ Link ](https://cognate-3-raspberrypi.web.app/)
+
+
+
+
+
 # IGNORE THIS COMMENT FOR THE MEANTIME
 
 ## Download this pipreqs using this command
