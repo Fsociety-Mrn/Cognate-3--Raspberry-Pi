@@ -20,7 +20,7 @@ from Firebase.firebase import firebaseUpdate,firebaseRead,firebaseReadChild
 while True:
     # for LED blink 
     print(firebaseReadChild("LED","turnOn"))
-
+    
 # for website copy & paste this link
 # https://cognate-3-raspberrypi.web.app/
 
