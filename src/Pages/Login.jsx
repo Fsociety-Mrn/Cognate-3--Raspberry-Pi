@@ -1,10 +1,8 @@
 import React from 'react'
-
 // Components
 import { 
   Button, 
   Grid, 
-  TextField, 
   Link, 
   Paper,
   Stack
@@ -19,6 +17,8 @@ import { secondaryColour } from '../index'
 
 // Validation
 import { EmailSchema, PasswordSchema } from '../Authentication/FormValidation'
+import { LoginHydro } from '../Authentication/LoginFirebase'
+
 
 const DesktopView = () => {
 
@@ -27,6 +27,8 @@ const [user, setUser] = React.useState({
   email : "",
   password : ""
 })
+
+
 
 const [error,setError] = React.useState(
   {
@@ -79,7 +81,19 @@ const validate = async () => {
     password: password.password,
     passwordMessage : password.passwordMessage   
   })
-  
+
+  if (!email.email && !password.password) {
+    const datas = await LoginHydro(user)
+    console.log(datas)
+    
+    setError({
+      email : datas,
+      emailMessage : "",
+      password: datas,
+      passwordMessage : ""    
+    })
+  }
+
 }
 
 // email and password text
@@ -157,6 +171,7 @@ const passwordChanged = e => {
             }}
             onClick={login}
             >Login</Button>
+
           </Stack>
         </Paper>
       </Grid>
@@ -185,7 +200,7 @@ const [error,setError] = React.useState(
 // Login function
 const login = async e => {
   e.preventDefault()
-  validate()
+  validate() 
 }
 
 
@@ -223,7 +238,19 @@ const validate = async () => {
     password: password.password,
     passwordMessage : password.passwordMessage   
   })
-  
+
+  if (!email.email && !password.password) {
+    const datas = await LoginHydro(user)
+    console.log(datas)
+    
+    setError({
+      email : datas,
+      emailMessage : "",
+      password: datas,
+      passwordMessage : ""    
+    })
+  }
+
 }
 
 // email and password text
