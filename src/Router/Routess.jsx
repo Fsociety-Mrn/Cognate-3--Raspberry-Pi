@@ -1,16 +1,19 @@
-import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import Login from '../Pages/Login'
 import Test from '../Test'
 import Homepage from '../Pages/Homepage'
-import { useAuth } from '../Authentication/LoginFirebase'
-const Routess = () => {
 
-const status = useAuth()
-  return (
+const Routess = () => {
+  let navigate = useNavigate(); 
+  let authToken = sessionStorage.getItem('TOKEN')
+  React.useEffect(()=>{
+   
+    if(!authToken) navigate('/Login')
+  },[])
+return (
     <div>
-      <LoginRoutes/>
-       {/*!sessionStorage.getItem('key')?  : <MainRoutes/> */ }
+    { authToken ? <MainRoutes/> : <LoginRoutes/> }
     </div>
   )
 }
@@ -20,7 +23,6 @@ const LoginRoutes = () => {
     <div>
       <Routes>
         <Route path="/Login" element={<Login/>}/>
-        <Route path="/Test" element={<Test/>}/>
         <Route path="*" element={<Navigate to="/Login"/>}/>
       </Routes>
     </div>
@@ -32,6 +34,7 @@ const MainRoutes = () => {
     <div>
       <Routes>
         <Route path="/Homepage" element={<Homepage/>}/>
+        <Route path="/Test" element={<Test/>}/>
         <Route path="*" element={<Navigate to="/Homepage"/>}/>
       </Routes>
     </div>

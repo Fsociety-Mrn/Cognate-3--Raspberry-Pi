@@ -5,7 +5,9 @@ import HelloFriend from '../images/HelloFriend.png'
 
 
 import {LogoutHydro} from '../Authentication/LoginFirebase'
+import { useNavigate } from 'react-router-dom'
 const Homepage = () => {
+  let navigate = useNavigate();
   return (
     <div>
         <Grid container
@@ -34,7 +36,9 @@ const Homepage = () => {
                 style={{
                     width:"300px"
                   }}
-                onClick={()=>LogoutHydro()}
+                onClick={()=>{LogoutHydro()
+                  navigate('/')
+                }}
                 >
                 Logout
                 </Button>

@@ -19,7 +19,10 @@ export const LoginHydro = async (user) => {
 
         return await signInWithEmailAndPassword(auth, user.email, user.password)
         .then(
-            ()=> {return false}
+            userdata=> {
+                sessionStorage.setItem('TOKEN',userdata._tokenResponse.refreshToken )
+                return false
+            }
         )
         .catch(error=>{
             return true
@@ -33,8 +36,10 @@ export const LoginHydro = async (user) => {
 // Logout
 export const LogoutHydro = async () => {
     await signOut(auth)
-    console.log(sessionStorage.getItem('key'))
+    
+    // console.log(sessionStorage.getItem('key'))
     return sessionStorage.clear();
+  
 }
 
 // check the login status
@@ -45,8 +50,8 @@ export function useAuth() {
     React.useEffect(() => {
       const unsub = onAuthStateChanged(auth, user => setCurrentUser());
       return unsub;
-    }, [auth])
+    })
     
     
-    return sessionStorage.setItem('key', currentUser);
+    return currentUser
   }

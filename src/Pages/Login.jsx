@@ -18,8 +18,11 @@ import { secondaryColour } from '../index'
 // Validation
 import { EmailSchema, PasswordSchema } from '../Authentication/FormValidation'
 import { LoginHydro } from '../Authentication/LoginFirebase'
+import { useNavigate } from 'react-router-dom'
 
 
+
+// For desktop view
 const DesktopView = () => {
 
 // Initialize variables
@@ -28,7 +31,7 @@ const [user, setUser] = React.useState({
   password : ""
 })
 
-
+let navigate = useNavigate();
 
 const [error,setError] = React.useState(
   {
@@ -41,14 +44,13 @@ const [error,setError] = React.useState(
 // Initialize function
 
 // Login function
-const login = async e => {
+const login = e => {
   e.preventDefault()
   validate()
+  
 }
 
-
 const validate = async () => {
-
   const email = await EmailSchema.validate({email: user.email}, {abortEarly: false})
   .then(e=>{return {
     email : false,
@@ -84,6 +86,7 @@ const validate = async () => {
 
   if (!email.email && !password.password) {
     const datas = await LoginHydro(user)
+    
     console.log(datas)
     
     setError({
@@ -92,6 +95,7 @@ const validate = async () => {
       password: datas,
       passwordMessage : ""    
     })
+    navigate('/Homepage')
   }
 
 }
@@ -135,6 +139,7 @@ const passwordChanged = e => {
 
 {/* Email and Username*/}        
           <LoginTextbox 
+          type='email'
           error={error.email}
           helperText={error.emailMessage}
           value={user.email}
@@ -144,7 +149,8 @@ const passwordChanged = e => {
           placeholder='Email'
           />
 
-          <LoginTextbox 
+          <LoginTextbox
+          type='password' 
           error={error.password}
           helperText={error.passwordMessage}
           value={user.password}
@@ -179,13 +185,15 @@ const passwordChanged = e => {
   )
 }
 
-
+// MobileView
 const MobileView = () => {
+
 // Initialize variables
 const [user, setUser] = React.useState({
   email : "",
   password : ""
 })
+let navigate = useNavigate();
 
 const [error,setError] = React.useState(
   {
@@ -249,6 +257,8 @@ const validate = async () => {
       password: datas,
       passwordMessage : ""    
     })
+
+    navigate('/Homepage')
   }
 
 }
@@ -307,8 +317,8 @@ const passwordChanged = e => {
 {/*email and password*/}        
             <Grid item xs={12} md={12} sm={12}>
               <LoginTextbox 
+              type='email'
               error={error.email}
-              // helperText={error.email ? error.emailMessage : ""}
               helperText={error.emailMessage}
               value={user.email}
               onChange={emailChanged}
@@ -319,6 +329,7 @@ const passwordChanged = e => {
               />
 
               <LoginTextbox 
+              type='password'
               error={error.password}
               helperText={error.passwordMessage}
               value={user.password}
