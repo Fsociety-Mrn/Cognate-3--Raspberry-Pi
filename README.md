@@ -42,6 +42,6 @@ pip install pipreqs
 
 ## open the folder and run main.py
 
-pip freeze > requirements.txt
-pip reqs .
+pip freeze >> requirements.txt
+pipreqs . --force
 pip install -r requirements.txt
