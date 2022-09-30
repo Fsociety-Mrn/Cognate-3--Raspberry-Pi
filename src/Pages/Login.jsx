@@ -8,7 +8,7 @@ import {
   Stack
 }from '@mui/material'
 import { LoginTextbox } from '../Components/CustomTextfield'
-
+import { Notificationnbar } from '../Components/Notificationbar'
 // Images or Icon
 import LOGO from '../images/LOGO.png'
 
@@ -31,7 +31,9 @@ const [user, setUser] = React.useState({
   password : ""
 })
 
-let navigate = useNavigate();
+// error notification
+const [erroNotif, setErrornotif] = React.useState(false)
+
 
 const [error,setError] = React.useState(
   {
@@ -87,7 +89,12 @@ const validate = async () => {
   if (!email.email && !password.password) {
     const datas = await LoginHydro(user)
     
-    console.log(datas)
+    if(!datas){
+      setErrornotif(false)
+      window.location.reload(false)
+    }else{
+      setErrornotif(true)
+    }
     
     setError({
       email : datas,
@@ -95,7 +102,7 @@ const validate = async () => {
       password: datas,
       passwordMessage : ""    
     })
-    navigate('/Homepage')
+
   }
 
 }
@@ -110,6 +117,17 @@ const passwordChanged = e => {
 
   return (
     <div>
+
+    <Notificationnbar
+    opens={erroNotif}
+    setOpens={setErrornotif}
+    message="Sorry, the email or password you entered is invalid." 
+    vert='top'
+    hori='left'
+    sever="error"
+    />
+
+
       <Grid container
       direction="column"
       justifyContent="center"
@@ -193,7 +211,8 @@ const [user, setUser] = React.useState({
   email : "",
   password : ""
 })
-let navigate = useNavigate();
+// error notification
+const [erroNotif, setErrornotif] = React.useState(false)
 
 const [error,setError] = React.useState(
   {
@@ -208,6 +227,7 @@ const [error,setError] = React.useState(
 // Login function
 const login = async e => {
   e.preventDefault()
+
   validate() 
 }
 
@@ -251,6 +271,13 @@ const validate = async () => {
     const datas = await LoginHydro(user)
     console.log(datas)
     
+    if(!datas){
+      setErrornotif(false)
+      window.location.reload(false)
+    }else{
+      setErrornotif(true)
+    }
+
     setError({
       email : datas,
       emailMessage : "",
@@ -258,7 +285,7 @@ const validate = async () => {
       passwordMessage : ""    
     })
 
-    navigate('/Homepage')
+    
   }
 
 }
@@ -273,6 +300,15 @@ const passwordChanged = e => {
 
   return (
     <div>
+
+    <Notificationnbar
+    opens={erroNotif}
+    setOpens={setErrornotif}
+    message="Sorry, the email or password you entered is invalid." 
+    vert='top'
+    hori='center'
+    sever="error"
+    />    
       <Grid
       container
       direction="row"

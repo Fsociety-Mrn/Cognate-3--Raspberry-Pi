@@ -5,12 +5,13 @@ import Test from '../Test'
 import Homepage from '../Pages/Homepage'
 
 const Routess = () => {
-  let navigate = useNavigate(); 
+  // let navigate = useNavigate(); 
   let authToken = sessionStorage.getItem('TOKEN')
-  React.useEffect(()=>{
-   
-    if(!authToken) navigate('/Login')
-  },[])
+  // React.useEffect(()=>{
+  // //  console.log(authToken)
+  //   if(!authToken) console.log("goods")
+  // },[])
+  
 return (
     <div>
     { authToken ? <MainRoutes/> : <LoginRoutes/> }

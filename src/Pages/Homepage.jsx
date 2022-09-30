@@ -37,7 +37,7 @@ const Homepage = () => {
                     width:"300px"
                   }}
                 onClick={()=>{LogoutHydro()
-                  navigate('/')
+                  window.location.reload(true)
                 }}
                 >
                 Logout
