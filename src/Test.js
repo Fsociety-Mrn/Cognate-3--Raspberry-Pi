@@ -12,7 +12,7 @@ useEffect(() => {
   onValue(ref(database , '/LED'), e => {
     setChecked(()=>e.child("turnOn").val()) 
   })
-},[database]);
+},[]);
 
   return (
     <div>
