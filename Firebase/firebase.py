@@ -29,7 +29,15 @@ def firebaseUpdate(keyName, value):
         print(db.child(keyName).get().val())
         # print("pumasok sa database")
         return True
-    
+
+def firebaseUpdateChild(keyName,keyChild,value):
+    try:
+        db.child(keyName).child(keyChild).set(value)
+    except:
+        return False 
+    finally:
+        return True 
+
 # create data
 def firebaseCreate(keyName, value):
     return db.child(keyName).set(value)
