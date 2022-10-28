@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cognate-3-raspberrypi"
-  }
+    "default": "cognate-3",
+    "cognate-3": "cognate-3"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -2,6 +2,8 @@ import { Grid, Paper, Switch, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import React from 'react'
 
+import { updateReal ,createReal} from '../firebase/Firebase_Real'
+
 // icons
 import AirIcon from '@mui/icons-material/Air';
 import WaterDamageRoundedIcon from '@mui/icons-material/WaterDamageRounded';
@@ -10,6 +12,9 @@ import WaterIcon from '@mui/icons-material/Water';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
 const Homepage = () => {
+
+  const [checked, setChecked] = React.useState(Boolean)
+  
   return (
 
     <div>
@@ -23,6 +28,39 @@ const Homepage = () => {
         spacing={1}
         padding={2}
       >
+
+      <Grid 
+      item xs={12} sm={12} md={12} xl={12}
+      >
+          <Stack
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+          >     
+              <Typography textAlign='center' variant='h5'>
+              You turn me on like a light switch
+              </Typography>
+
+              <Switch 
+              checked={checked}
+
+              onChange={e=>{
+                  
+                  setChecked(!checked);
+                  updateReal("LED",{
+                    turnOn: !checked
+                  });
+                  
+                  }
+              }
+              inputProps={{ 'aria-label': 'controlled' }}
+              />
+          
+          </Stack>
+     
+
+      </Grid>
 
         {/*Humidity level*/}
         <Grid item xs={12} sm={12} md={4} xl={4}>

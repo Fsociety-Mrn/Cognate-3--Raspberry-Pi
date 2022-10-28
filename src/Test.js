@@ -8,11 +8,11 @@ const Test = () => {
 const [checked, setChecked] = useState(Boolean)
 
 // state for switch
-useEffect(() => {
-  onValue(ref(database , '/LED'), e => {
-    setChecked(()=>e.child("turnOn").val()) 
-  })
-},[]);
+// useEffect(() => {
+//   onValue(ref(database , '/LED'), e => {
+//     setChecked(()=>e.child("turnOn").val()) 
+//   })
+// },[]);
 
   return (
     <div>
