@@ -1,26 +1,10 @@
 # main file 
-from Firebase.firebase import firebaseUpdate,firebaseRead,firebaseReadChild
+from Firebase.firebase import firebaseUpdate,firebaseRead,firebaseReadChild,firebaseCreate
 
-# firebaseUpdate(keyValue,value) 
-# keyValue = name ng current value
-# use this function if you want to update the 
-# return a boolean function
-
-# print(firebaseUpdate("Example","OO GUMAGANA"))
-
-# firebaseRead(keyValue) 
-# keyValue = name ng current value
-# use this function if you want to read a specific keyName
-#
-
-# print(firebaseRead("Example"))
-
-
-
-while True:
-    # for LED blink 
-    print(firebaseReadChild("LED","turnOn"))
+# main function
+def main():
+    print(firebaseUpdate("LED","wait"))
     
-# for website copy & paste this link
-# https://cognate-3-raspberrypi.web.app/
+    return main()
 
+main()

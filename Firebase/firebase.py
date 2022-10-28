@@ -4,7 +4,7 @@ import os
 config = {
   "apiKey": os.environ.get("apiKey"),
   "authDomain": os.environ.get("authDomain"),
-  "databaseURL": "https://cognate-3-raspberrypi-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "databaseURL": "https://cognate-3-default-rtdb.asia-southeast1.firebasedatabase.app",
   "storageBucket": os.environ.get("storageBucket")
 }
 firebase = pyrebase.initialize_app(config)
@@ -23,11 +23,15 @@ def firebaseUpdate(keyName, value):
     try:
         db.child(keyName).set(value)
     except:
-        print("may error")
+        # print("may error")
         return False 
     finally:
         print(db.child(keyName).get().val())
-        print("pumasok sa database")
+        # print("pumasok sa database")
         return True
+    
+# create data
+def firebaseCreate(keyName, value):
+    return db.child(keyName).set(value)
     
      
