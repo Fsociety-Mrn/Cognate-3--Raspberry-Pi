@@ -2,7 +2,9 @@ import { Grid, Paper, Switch, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import React from 'react'
 
-import { updateReal ,createReal} from '../firebase/Firebase_Real'
+// firebase
+import { updateReal , database} from '../firebase/Firebase_Real'
+import { onValue, ref } from 'firebase/database';
 
 // icons
 import AirIcon from '@mui/icons-material/Air';
@@ -11,9 +13,16 @@ import LandslideIcon from '@mui/icons-material/Landslide';
 import WaterIcon from '@mui/icons-material/Water';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
+
 const Homepage = () => {
 
   const [checked, setChecked] = React.useState(Boolean)
+
+  React.useEffect(() => {
+    onValue(ref(database , '/LED'), e => {
+      setChecked(()=>e.child("turnOn").val()) 
+    })
+  },[]);
   
   return (
 
