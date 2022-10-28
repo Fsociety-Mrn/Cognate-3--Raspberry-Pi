@@ -3,7 +3,7 @@ from Firebase.firebase import firebaseUpdate,firebaseRead,firebaseReadChild,fire
 
 # main function
 def main():
-    print(firebaseUpdate("LED","wait"))
+    print(firebaseReadChild("LED","turnOn"))
     
     return main()
 
