@@ -17,11 +17,19 @@ import AcUnitIcon from '@mui/icons-material/AcUnit';
 const Homepage = () => {
 
   const [checked, setChecked] = React.useState(Boolean)
-
+  const [humid, setHumid] = React.useState("")
   React.useEffect(() => {
+
+    // LED
     onValue(ref(database , '/LED'), e => {
       setChecked(()=>e.child("turnOn").val()) 
     })
+
+    // Humidity
+    onValue(ref(database , '/Humid'), e => {
+      setHumid(()=>e.child("Humidity").val().replace('Temp=768*C Humidity=','')) 
+    })
+
   },[]);
   
   return (
@@ -90,7 +98,7 @@ const Homepage = () => {
                   variant="h6"
                   textAlign='center'
                   color='#3C4048'>
-                  Humidity Level
+                  Humidity
                 </Typography>
               </Grid>
 
@@ -104,10 +112,10 @@ const Homepage = () => {
                   <AirIcon fontSize="large" sx={{ color: '#3C4048' }}/>
 
                   <Typography
-                  variant="h4"
+                  variant="h5"
                   textAlign='center'
                   color='#3C4048'>
-                    100
+                    {humid}
                   </Typography>
                 </Stack>
 
