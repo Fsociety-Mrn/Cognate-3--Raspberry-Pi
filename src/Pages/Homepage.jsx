@@ -3,11 +3,11 @@ import { Stack } from '@mui/system'
 import React from 'react'
 
 // firebase
-import { updateReal , database} from '../firebase/Firebase_Real'
+import { database} from '../firebase/Firebase_Real'
 import { onValue, ref } from 'firebase/database';
 
 // icons
-import AirIcon from '@mui/icons-material/Air';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
 import WaterDamageRoundedIcon from '@mui/icons-material/WaterDamageRounded';
 import LandslideIcon from '@mui/icons-material/Landslide';
 import WaterIcon from '@mui/icons-material/Water';
@@ -16,22 +16,37 @@ import AcUnitIcon from '@mui/icons-material/AcUnit';
 
 const Homepage = () => {
 
-  const [checked, setChecked] = React.useState(Boolean)
-  const [humid, setHumid] = React.useState("")
+  const [temp, setTemp] = React.useState("")
+  const [waterLevel, setWaterLevel] = React.useState("")
+  const [tds, setTds] = React.useState("")
+  const [waterPump, setWaterPump] = React.useState(Boolean)
+  const [oxyPump, setOxyPump] = React.useState(Boolean)
+
   React.useEffect(() => {
 
-    // LED
-    onValue(ref(database , '/LED'), e => {
-      setChecked(()=>e.child("turnOn").val()) 
+    // Temperature
+    onValue(ref(database , '/Humid'), e => {
+      setTemp(()=>e.child("Humidity").val()) 
     })
 
-    // Humidity
-    onValue(ref(database , '/Humid'), e => {
-      setHumid(()=>e.child("Humidity").val().replace('Temp=768*C Humidity=','')) 
+    // water level
+    onValue(ref(database , '/waterLevel'), e => {
+      setWaterLevel(()=>e.child("level").val()) 
+    })
+
+    // TDS
+    onValue(ref(database , '/TDS'), e => {
+      setTds(()=>e.child("data").val()) 
     })
 
   },[]);
-  
+  const waterpumpF = () =>{
+    setWaterPump(!waterPump)
+  }
+
+  const oxypumpF = () =>{
+    setOxyPump(!oxyPump)
+  }
   return (
 
     <div>
@@ -49,37 +64,12 @@ const Homepage = () => {
       <Grid 
       item xs={12} sm={12} md={12} xl={12}
       >
-          <Stack
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          spacing={2}
-          >     
-              <Typography textAlign='center' variant='h5'>
-              You turn me on like a light switch
-              </Typography>
 
-              <Switch 
-              checked={checked}
-
-              onChange={e=>{
-                  
-                  setChecked(!checked);
-                  updateReal("LED",{
-                    turnOn: !checked
-                  });
-                  
-                  }
-              }
-              inputProps={{ 'aria-label': 'controlled' }}
-              />
-          
-          </Stack>
      
 
       </Grid>
 
-        {/*Humidity level*/}
+        {/*Temperature level*/}
         <Grid item xs={12} sm={12} md={4} xl={4}>
           <Paper elevation={0} sx={{
             backgroundColor: "WHITE",
@@ -98,7 +88,7 @@ const Homepage = () => {
                   variant="h6"
                   textAlign='center'
                   color='#3C4048'>
-                  Humidity
+                  Temperature
                 </Typography>
               </Grid>
 
@@ -109,13 +99,13 @@ const Homepage = () => {
                 alignItems="center"
                 spacing={2}
                 >
-                  <AirIcon fontSize="large" sx={{ color: '#3C4048' }}/>
+                  <ThermostatIcon fontSize="large" sx={{ color: '#3C4048' }}/>
 
                   <Typography
-                  variant="h5"
+                  variant="h4"
                   textAlign='center'
                   color='#3C4048'>
-                    {humid}
+                    {temp}
                   </Typography>
                 </Stack>
 
@@ -160,7 +150,7 @@ const Homepage = () => {
                   variant="h4"
                   textAlign='center'
                   color='#47B5FF'>
-                    100%
+                    {waterLevel}
                   </Typography>
                 </Stack>
 
@@ -205,7 +195,7 @@ const Homepage = () => {
                   variant="h4"
                   textAlign='center'
                   color='#665A48'>
-                    100
+                    {tds}
                   </Typography>
                 </Stack>
 
@@ -247,8 +237,8 @@ const Homepage = () => {
                   <WaterIcon fontSize="large" sx={{ color: '#0078AA' }}/>
                   
                   <Switch
-                  checked={true}
-                  // onChange={handleChange}
+                  checked={waterPump}
+                  onChange={waterpumpF}
                   // inputProps={{ 'aria-label': 'controlled' }}
                   style={{ color: '#0078AA' }}
                 />
@@ -292,8 +282,8 @@ const Homepage = () => {
                   <AcUnitIcon fontSize="large" sx={{ color: '#256D85' }}/>
 
                   <Switch
-                  checked={true}
-                  // onChange={handleChange}
+                  checked={oxyPump}
+                  onChange={oxypumpF}
                   // inputProps={{ 'aria-label': 'controlled' }}
                   style={{ color: '#256D85' }}
                   />
