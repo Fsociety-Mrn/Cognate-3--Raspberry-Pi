@@ -3,14 +3,15 @@ import serial
 import time
 
 
-port = "COM4" or '/dev/ttyACM0'
+port = '/dev/ttyACM0'
 Arduino = serial.Serial(port ,9600, timeout=1)
 Arduino.reset_input_buffer()
 
 def readTDS():
+    Arduino.flush()
     data = Arduino.readline().decode('utf-8').rstrip()
+    time.sleep(.5)
     print(data)
-    time.sleep(1)
-    return readTDS()
+    return data
 
-readTDS()
+# readTDS()
