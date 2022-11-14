@@ -15,15 +15,20 @@ sensor = Adafruit_DHT.DHT22
 # ********************** Pin Configuration ********************** #
 LED = 12
 Humid = 4
-floatSwitchh = 16
+FloatSwitchh = 16
+OxyPump = 8
+WaterPump = 11
+PeralPump = 18
 
 # ********************** setup functions ********************** # 
 def setup():
     GPIO.setwarnings(False) 
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED,GPIO.OUT) 
-    GPIO.setup(floatSwitchh,GPIO.IN)
-    
+    GPIO.setup(FloatSwitchh,GPIO.IN)
+    GPIO.setup(OxyPump,GPIO.OUT)
+    GPIO.setup(WaterPump,GPIO.OUT)
+    GPIO.setup(PeralPump,GPIO.OUT) 
 # ********************** functions ********************** #  
 
 # for humidty function
@@ -51,13 +56,20 @@ def Led():
     # print(firebaseReadChild("LED","turnOn"))
 
 def waterLevel():
-    time.sleep(1)
-    if GPIO.input(floatSwitchh):
+    if GPIO.input(FloatSwitchh):
         firebaseUpdateChild("waterLevel","level","100%")
         
     else:
         firebaseUpdateChild("waterLevel","level","0%")
     
+def oxygenPump():
+    GPIO.output(OxyPump,firebaseReadChild("oxyPump","data"))
+    
+def waterPump():
+    GPIO.output(WaterPump,firebaseReadChild("waterPump","data"))
+    
+def peralPump():
+    GPIO.output(PeralPump,firebaseReadChild("peralPump","data"))
 
 # ********************** loop function ********************** #
 def loop():
@@ -71,8 +83,17 @@ def loop():
     #TDS
     threading.Thread(target=firebaseUpdateChild, args=("TDS","data", readTDS())).start()
     
-    #wate level
+    #water level
     threading.Thread(target=waterLevel, args=()).start()
+
+    #Oxygen Pump
+    threading.Thread(target=oxygenPump, args=()).start()
+    
+    #Water Pump
+    threading.Thread(target=waterPump, args=()) .start()
+    
+    #Peraltalstic Pump
+    threading.Thread(target=peralPump, args=()).start()
 
 
     return loop()
@@ -81,4 +102,5 @@ def loop():
 
 setup()
 loop()
+
 

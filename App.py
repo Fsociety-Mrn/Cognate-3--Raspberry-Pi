@@ -23,14 +23,12 @@ class App(customtkinter.CTk):
         self.frame = customtkinter.CTkFrame(master=self)
         self.frame.pack(pady=10, padx=10, fill="both", expand=True)
       
-        
         self.grid_columnconfigure(2, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
         self.frame_left = customtkinter.CTkFrame(master=self.frame)
         self.frame_left.grid(row=0, column=0, sticky="nswe", padx=25, pady=20)
 
-        
         self.frame_left1 = customtkinter.CTkFrame(master=self.frame, width=App.WIDTH/3)
         self.frame_left1.grid(row=1, column=1, sticky="nswe", padx=25, pady=20)
         
