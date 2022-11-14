@@ -3,7 +3,7 @@ import { Stack } from '@mui/system'
 import React from 'react'
 
 // firebase
-import { database} from '../firebase/Firebase_Real'
+import { database, updateReal} from '../firebase/Firebase_Real'
 import { onValue, ref } from 'firebase/database';
 
 // icons
@@ -21,6 +21,7 @@ const Homepage = () => {
   const [tds, setTds] = React.useState("")
   const [waterPump, setWaterPump] = React.useState(Boolean)
   const [oxyPump, setOxyPump] = React.useState(Boolean)
+  const [peralPump, setPeralPump] = React.useState(Boolean)
 
   React.useEffect(() => {
 
@@ -39,13 +40,41 @@ const Homepage = () => {
       setTds(()=>e.child("data").val()) 
     })
 
+    // Water
+    onValue(ref(database , '/waterPump'), e => {
+      setWaterPump(()=>e.child("data").val()) 
+    })
+
+    // Oxygen
+    onValue(ref(database , '/oxyPump'), e => {
+      setOxyPump(()=>e.child("data").val()) 
+    })
+
+    // Peraltalstic
+    onValue(ref(database , '/peralPump'), e => {
+      setPeralPump(()=>e.child("data").val()) 
+    })
+
   },[]);
+
   const waterpumpF = () =>{
-    setWaterPump(!waterPump)
+    // setWaterPump(!waterPump)
+
+    updateReal("waterPump",{
+      data: !waterPump
+    });
   }
 
   const oxypumpF = () =>{
-    setOxyPump(!oxyPump)
+    updateReal("oxyPump",{
+      data: !oxyPump
+    });
+  }
+
+  const peralpumpF = () =>{
+    updateReal("peralPump",{
+      data: !peralPump
+    });
   }
   return (
 
@@ -293,6 +322,52 @@ const Homepage = () => {
             </Grid>
           </Paper>
         </Grid>
+
+        {/*Peral pump*/}
+        <Grid item xs={12} sm={12} md={4} xl={4}>
+          <Paper elevation={0} sx={{
+            backgroundColor: "WHITE",
+            border: '2px solid #3B5437'
+          }}
+          > 
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              padding={2}
+            >
+              <Grid item xs={12} md={12}>
+                <Typography
+                  variant="h6"
+                  textAlign='center'
+                  color='#0078AA'>
+                  Peraltalstic pump
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={12}>
+                <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+                >
+                  <WaterIcon fontSize="large" sx={{ color: '#0078AA' }}/>
+                  
+                  <Switch
+                  checked={peralPump}
+                  onChange={peralpumpF}
+                  // inputProps={{ 'aria-label': 'controlled' }}
+                  style={{ color: '#0078AA' }}
+                />
+                </Stack>
+
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
 
       </Grid>
     </div>
