@@ -20,6 +20,10 @@ OxyPump = 8
 WaterPump = 11
 PeralPump = 18
 
+# ********* Sonar Sensor
+Trig = 13 # brown
+Echo = 15 # green
+
 # ********************** setup functions ********************** # 
 def setup():
     GPIO.setwarnings(False) 
@@ -28,7 +32,10 @@ def setup():
     GPIO.setup(FloatSwitchh,GPIO.IN)
     GPIO.setup(OxyPump,GPIO.OUT)
     GPIO.setup(WaterPump,GPIO.OUT)
-    GPIO.setup(PeralPump,GPIO.OUT) 
+    GPIO.setup(PeralPump,GPIO.OUT)
+    
+    GPIO.setup(Trig,GPIO.OUT)
+    GPIO.setup(Echo,GPIO.IN)
 # ********************** functions ********************** #  
 
 # for humidty function
@@ -56,11 +63,42 @@ def Led():
     # print(firebaseReadChild("LED","turnOn"))
 
 def waterLevel():
+    
+    GPIO.output(Trig, True)
+    # set Trigger after 0.01ms to LOW
+    time.sleep(0.00001)
+    GPIO.output(Trig, False)
+
+    StartTime = time.time()
+    StopTime = time.time()
+ 
+    # save StartTime
+    while GPIO.input(Echo) == 0:
+        StartTime = time.time()
+ 
+    # save time of arrival
+    while GPIO.input(Echo) == 1:
+        StopTime = time.time()
+ 
+    # time difference between start and arrival
+    TimeElapsed = StopTime - StartTime
+    
+    # multiply with the sonic speed (34300 cm/s)
+    # and divide by 2, because there and back
+
+    cm = (TimeElapsed * 34300) / 2
+    
+    inches = float('%1.1f'%(cm / 2.54));
+
+    percent =(int(inches) * 100)/ 12;
+    
+    print(str(int(percent)) + "%")
+   
     if GPIO.input(FloatSwitchh):
         firebaseUpdateChild("waterLevel","level","100%")
         
     else:
-        firebaseUpdateChild("waterLevel","level","0%")
+        firebaseUpdateChild("waterLevel","level",str(int(percent)) + "%")
     
 def oxygenPump():
     GPIO.output(OxyPump,firebaseReadChild("oxyPump","data"))
@@ -69,7 +107,12 @@ def waterPump():
     GPIO.output(WaterPump,firebaseReadChild("waterPump","data"))
     
 def peralPump():
-    GPIO.output(PeralPump,firebaseReadChild("peralPump","data"))
+    data = firebaseReadChild("peralPump","data")
+    GPIO.output(PeralPump,data)
+    
+    if data:
+        time.sleep(10   )
+        firebaseUpdateChild("peralPump","data",False)
 
 # ********************** loop function ********************** #
 def loop():
@@ -90,11 +133,10 @@ def loop():
     threading.Thread(target=oxygenPump, args=()).start()
     
     #Water Pump
-    threading.Thread(target=waterPump, args=()) .start()
+    threading.Thread(target=waterPump, args=()).start()
     
     #Peraltalstic Pump
     threading.Thread(target=peralPump, args=()).start()
-
 
     return loop()
 
