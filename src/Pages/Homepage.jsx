@@ -356,7 +356,7 @@ const Homepage = () => {
                   <WaterIcon fontSize="large" sx={{ color: '#0078AA' }}/>
                   
                   <Switch
-                  checked={peralPump}
+                  checked={!peralPump}
                   onChange={peralpumpF}
                   // inputProps={{ 'aria-label': 'controlled' }}
                   style={{ color: '#0078AA' }}
