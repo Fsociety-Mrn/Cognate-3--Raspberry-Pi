@@ -66,7 +66,7 @@ def waterLevel():
     
     GPIO.output(Trig, True)
     # set Trigger after 0.01ms to LOW
-    time.sleep(0.00001)
+    time.sleep(1)
     GPIO.output(Trig, False)
 
     StartTime = time.time()
@@ -90,15 +90,17 @@ def waterLevel():
     
     inches = float('%1.1f'%(cm / 2.54));
 
-    percent =(int(inches) * 100)/ 12;
+    percent =(int(inches) * 100)/ 11;
     
-    print(str(int(percent)) + "%")
+    print(str(GPIO.input(FloatSwitchh)))
    
-    if GPIO.input(FloatSwitchh):
-        firebaseUpdateChild("waterLevel","level","100%")
-        
+    if not GPIO.input(FloatSwitchh):
+
+            
+        firebaseUpdateChild("waterLevel","level",str(int(percent)) + " %")
     else:
-        firebaseUpdateChild("waterLevel","level",str(int(percent)) + "%")
+         firebaseUpdateChild("waterLevel","level","100%")   
+        # firebaseUpdateChild("waterLevel","level",str(int(100 - percent)) + "%")
     
 def oxygenPump():
     GPIO.output(OxyPump,firebaseReadChild("oxyPump","data"))
@@ -107,12 +109,16 @@ def waterPump():
     GPIO.output(WaterPump,firebaseReadChild("waterPump","data"))
     
 def peralPump():
+    # 20L of tubig
     data = firebaseReadChild("peralPump","data")
     GPIO.output(PeralPump,data)
     
-    if data:
-        time.sleep(10   )
-        firebaseUpdateChild("peralPump","data",False)
+    if data == False:
+        firebaseUpdateChild("waterPump","data",False)
+        GPIO.output(WaterPump,GPIO.LOW)
+        time.sleep(100)
+        firebaseUpdateChild("peralPump","data",True)
+
 
 # ********************** loop function ********************** #
 def loop():
@@ -146,3 +152,4 @@ setup()
 loop()
 
 
+ 
