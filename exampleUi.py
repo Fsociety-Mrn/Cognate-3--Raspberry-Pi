@@ -1,192 +1,186 @@
-import tkinter
-import tkinter.messagebox
+from tkinter import *
 import customtkinter
+from PIL import ImageTk, Image
+import tkinter as tk
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
+root = tk.Tk()
 
-class App(customtkinter.CTk):
+root.title('Hydroponics')
+root.iconbitmap('Images/hydroponic.ico')
+root.state('zoomed')
+root.resizable(0,0)
+root.configure(bg='#FFFFFF')
 
-    WIDTH = 780
-    HEIGHT = 520
+#==================================2 main frames top and bottom====================================
 
-    def __init__(self):
-        super().__init__()
+top_frame = tk.Frame(root, width=1310, height=400, background="#F5F5F5")
+top_frame.pack(pady=30, padx=30)
+top_frame.pack_propagate("false")
 
-        self.title("CustomTkinter complex_example.py")
-        self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
+bot_frame = tk.Frame(root, width=1310, height=250, background="#F5F5F5")
+bot_frame.pack(padx=30)
+bot_frame.pack_propagate("false")
 
-        # ============ create two frames ============
+#==================================3 top frames====================================
 
-        # configure grid layout (2x1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+myLabel = Label(top_frame, text="Parameters", bg="#F5F5F5", fg='#3B3D40', font=("Open Sans Semibold", 12))
+myLabel.grid(pady=5, padx=10, sticky='w')
 
-        self.frame_left = customtkinter.CTkFrame(master=self,
-                                                 width=180,
-                                                 corner_radius=0)
-        self.frame_left.grid(row=0, column=0, sticky="nswe")
+top_frame1 = tk.Frame(top_frame, width=430, height=370, bg="#FFFFFF")
+top_frame1.grid(row=3, column=0, padx=2, pady=4)
+top_frame1.pack_propagate("false")
 
-        self.frame_right = customtkinter.CTkFrame(master=self)
-        self.frame_right.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
+top_frame2 = tk.Frame(top_frame, width=430, height=370, bg="#FFFFFF")
+top_frame2.grid(row=3, column=1, padx=2, pady=4)
+top_frame2.pack_propagate("false")
 
-        # ============ frame_left ============
+top_frame3 = tk.Frame(top_frame, width=430, height=370, bg="#FFFFFF")
+top_frame3.grid(row=3, column=2, padx=2, pady=4)
+top_frame3.pack_propagate("false")
 
-        # configure grid layout (1x11)
-        self.frame_left.grid_rowconfigure(0, minsize=10)   # empty row with minsize as spacing
-        self.frame_left.grid_rowconfigure(5, weight=1)  # empty row as spacing
-        self.frame_left.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
-        self.frame_left.grid_rowconfigure(11, minsize=10)  # empty row with minsize as spacing
+#==================================top frame 1 info====================================
 
-        self.label_1 = customtkinter.CTkLabel(master=self.frame_left,
-                                              text="CustomTkinter",
-                                              text_font=("Roboto Medium", -16))  # font name and size in px
-        self.label_1.grid(row=1, column=0, pady=10, padx=10)
+my_img = (Image.open("Images/celsius.png"))
 
-        self.button_1 = customtkinter.CTkButton(master=self.frame_left,
-                                                text="CTkButton",
-                                                command=self.button_event)
-        self.button_1.grid(row=2, column=0, pady=10, padx=20)
+resized_image= my_img.resize((110,110))
+new_image= ImageTk.PhotoImage(resized_image)
 
-        self.button_2 = customtkinter.CTkButton(master=self.frame_left,
-                                                text="CTkButton",
-                                                command=self.button_event)
-        self.button_2.grid(row=3, column=0, pady=10, padx=20)
+myLabel1 = Label(top_frame1, text=" \n" + " ", bg='#FFFFFF')
+myLabel1.pack()
 
-        self.button_3 = customtkinter.CTkButton(master=self.frame_left,
-                                                text="CTkButton",
-                                                command=self.button_event)
-        self.button_3.grid(row=4, column=0, pady=10, padx=20)
+myLabel2= Label(top_frame1, image=new_image, height=170, width=170, bg='#FFFFFF')
+myLabel2.pack()
 
-        self.label_mode = customtkinter.CTkLabel(master=self.frame_left, text="Appearance Mode:")
-        self.label_mode.grid(row=9, column=0, pady=0, padx=20, sticky="w")
+#dito yung value na manggagaling sa sensor
+myLabel3 = Label(top_frame1, text="00.0 °C", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+myLabel3.pack()
 
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(master=self.frame_left,
-                                                        values=["Light", "Dark", "System"],
-                                                        command=self.change_appearance_mode)
-        self.optionmenu_1.grid(row=10, column=0, pady=10, padx=20, sticky="w")
+myLabel4 = Label(top_frame1, text="Temperature", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4.pack()
 
-        # ============ frame_right ============
+#==================================top frame 2 info====================================
 
-        # configure grid layout (3x7)
-        self.frame_right.rowconfigure((0, 1, 2, 3), weight=1)
-        self.frame_right.rowconfigure(7, weight=10)
-        self.frame_right.columnconfigure((0, 1), weight=1)
-        self.frame_right.columnconfigure(2, weight=0)
+my_img_1 = (Image.open("Images/water-level.png"))
 
-        self.frame_info = customtkinter.CTkFrame(master=self.frame_right)
-        self.frame_info.grid(row=0, column=0, columnspan=2, rowspan=4, pady=20, padx=20, sticky="nsew")
+resized_image_1= my_img_1.resize((110,110))
+new_image_1= ImageTk.PhotoImage(resized_image_1)
 
-        # ============ frame_info ============
+myLabel1_2 = Label(top_frame2, text=" \n" + " ", bg='#FFFFFF')
+myLabel1_2.pack()
 
-        # configure grid layout (1x1)
-        self.frame_info.rowconfigure(0, weight=1)
-        self.frame_info.columnconfigure(0, weight=1)
+myLabel2_2= Label(top_frame2, image=new_image_1, height=170, width=170, bg='#FFFFFF')
+myLabel2_2.pack()
 
-        self.label_info_1 = customtkinter.CTkLabel(master=self.frame_info,
-                                                   text="CTkLabel: Lorem ipsum dolor sit,\n" +
-                                                        "amet consetetur sadipscing elitr,\n" +
-                                                        "sed diam nonumy eirmod tempor" ,
-                                                   height=100,
-                                                   corner_radius=6,  # <- custom corner radius
-                                                   fg_color=("white", "gray38"),  # <- custom tuple-color
-                                                   justify=tkinter.LEFT)
-        self.label_info_1.grid(column=0, row=0, sticky="nwe", padx=15, pady=15)
+#dito yung value na manggagaling sa sensor
+myLabel3_2 = Label(top_frame2, text="100 %", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+myLabel3_2.pack()
 
-        self.progressbar = customtkinter.CTkProgressBar(master=self.frame_info)
-        self.progressbar.grid(row=1, column=0, sticky="ew", padx=15, pady=15)
+myLabel4_2 = Label(top_frame2, text="Water Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4_2.pack()
 
-        # ============ frame_right ============
+#==================================top frame 3 info====================================
 
-        self.radio_var = tkinter.IntVar(value=0)
+my_img_2 = (Image.open("Images/meter.png"))
 
-        self.label_radio_group = customtkinter.CTkLabel(master=self.frame_right,
-                                                        text="CTkRadioButton Group:")
-        self.label_radio_group.grid(row=0, column=2, columnspan=1, pady=20, padx=10, sticky="")
+resized_image_2= my_img_2.resize((110,110))
+new_image_2= ImageTk.PhotoImage(resized_image_2)
 
-        self.radio_button_1 = customtkinter.CTkRadioButton(master=self.frame_right,
-                                                           variable=self.radio_var,
-                                                           value=0)
-        self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n")
+myLabel1_3 = Label(top_frame3, text=" \n" + " ", bg='#FFFFFF')
+myLabel1_3.pack()
 
-        self.radio_button_2 = customtkinter.CTkRadioButton(master=self.frame_right,
-                                                           variable=self.radio_var,
-                                                           value=1)
-        self.radio_button_2.grid(row=2, column=2, pady=10, padx=20, sticky="n")
+myLabel2_3= Label(top_frame3, image=new_image_2, height=170, width=170, bg='#FFFFFF')
+myLabel2_3.pack()
 
-        self.radio_button_3 = customtkinter.CTkRadioButton(master=self.frame_right,
-                                                           variable=self.radio_var,
-                                                           value=2)
-        self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
+#dito yung value na manggagaling sa sensor
+myLabel3_3 = Label(top_frame3, text="0 PPM", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+myLabel3_3.pack()
 
-        self.slider_1 = customtkinter.CTkSlider(master=self.frame_right,
-                                                from_=0,
-                                                to=1,
-                                                number_of_steps=3,
-                                                command=self.progressbar.set)
-        self.slider_1.grid(row=4, column=0, columnspan=2, pady=10, padx=20, sticky="we")
+myLabel4_3 = Label(top_frame3, text="TDS Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4_3.pack()
 
-        self.slider_2 = customtkinter.CTkSlider(master=self.frame_right,
-                                                command=self.progressbar.set)
-        self.slider_2.grid(row=5, column=0, columnspan=2, pady=10, padx=20, sticky="we")
+#==================================3 bottom frames====================================
 
-        self.switch_1 = customtkinter.CTkSwitch(master=self.frame_right,
-                                                text="CTkSwitch")
-        self.switch_1.grid(row=4, column=2, columnspan=1, pady=10, padx=20, sticky="we")
+myLabel = Label(bot_frame, text="Switches", bg="#F5F5F5", fg='#3B3D40', font=("Open Sans Semibold", 12))
+myLabel.grid(pady=5, padx=10, sticky='w')
 
-        self.switch_2 = customtkinter.CTkSwitch(master=self.frame_right,
-                                                text="CTkSwitch")
-        self.switch_2.grid(row=5, column=2, columnspan=1, pady=10, padx=20, sticky="we")
+bot_frame1 = tk.Frame(bot_frame, width=430, height=190, bg="#FFFFFF")
+bot_frame1.grid(row=3, column=0, padx=2, pady=4)
+bot_frame1.pack_propagate("false")
 
-        self.combobox_1 = customtkinter.CTkComboBox(master=self.frame_right,
-                                                    values=["Value 1", "Value 2"])
-        self.combobox_1.grid(row=6, column=2, columnspan=1, pady=10, padx=20, sticky="we")
+bot_frame2 = tk.Frame(bot_frame, width=430, height=190, bg="#FFFFFF")
+bot_frame2.grid(row=3, column=1, padx=2, pady=4)
+bot_frame2.pack_propagate("false")
 
-        self.check_box_1 = customtkinter.CTkCheckBox(master=self.frame_right,
-                                                     text="CTkCheckBox")
-        self.check_box_1.grid(row=6, column=0, pady=10, padx=20, sticky="w")
+bot_frame3 = tk.Frame(bot_frame, width=430, height=190, bg="#FFFFFF")
+bot_frame3.grid(row=3, column=2, padx=2, pady=4)
+bot_frame3.pack_propagate("false")
 
-        self.check_box_2 = customtkinter.CTkCheckBox(master=self.frame_right,
-                                                     text="CTkCheckBox")
-        self.check_box_2.grid(row=6, column=1, pady=10, padx=20, sticky="w")
+#==================================bottom frame 1 info====================================
 
-        self.entry = customtkinter.CTkEntry(master=self.frame_right,
-                                            width=120,
-                                            placeholder_text="CTkEntry")
-        self.entry.grid(row=8, column=0, columnspan=2, pady=20, padx=20, sticky="we")
+my_img_3 = (Image.open("Images/water-pump.png"))
 
-        self.button_5 = customtkinter.CTkButton(master=self.frame_right,
-                                                text="CTkButton",
-                                                border_width=2,  # <- custom border_width
-                                                fg_color=None,  # <- no fg_color
-                                                command=self.button_event)
-        self.button_5.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
+resized_image_3= my_img_3.resize((70,70))
+new_image_3= ImageTk.PhotoImage(resized_image_3)
 
-        # set default values
-        self.optionmenu_1.set("Dark")
-        self.button_3.configure(state="disabled", text="Disabled CTkButton")
-        self.combobox_1.set("CTkCombobox")
-        self.radio_button_1.select()
-        self.slider_1.set(0.2)
-        self.slider_2.set(0.7)
-        self.progressbar.set(0.5)
-        self.switch_2.select()
-        self.radio_button_3.configure(state=tkinter.DISABLED)
-        self.check_box_1.configure(state=tkinter.DISABLED, text="CheckBox disabled")
-        self.check_box_2.select()
+myLabel1 = Label(bot_frame1, text=" \n" + " \n", bg='#FFFFFF')
+myLabel1.pack(padx=25, pady=15, side=tk.LEFT)
 
-    def button_event(self):
-        print("Button pressed")
+myLabel2= Label(bot_frame1, image=new_image_3, height=80, width=120, bg='#FFFFFF')
+myLabel2.pack(side=tk.LEFT)
 
-    def change_appearance_mode(self, new_appearance_mode):
-        customtkinter.set_appearance_mode(new_appearance_mode)
+myLabel3 = Label(bot_frame1, text=" \n" + " \n", bg='#FFFFFF')
+myLabel3.pack()
 
-    def on_closing(self, event=0):
-        self.destroy()
+myLabel4 = Label(bot_frame1, text="Water Pump", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4.pack(pady=15)
 
+switch_1 = customtkinter.CTkSwitch(bot_frame1, text="")     #eto yung switch pre
+switch_1.pack()
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+#==================================bottom frame 2 info====================================
+
+my_img_4 = (Image.open("Images/oxygen.png"))
+
+resized_image_4= my_img_4.resize((70,70))
+new_image_4= ImageTk.PhotoImage(resized_image_4)
+
+myLabel1_2 = Label(bot_frame2, text=" \n" + " \n", bg='#FFFFFF')
+myLabel1_2.pack(padx=25, pady=15, side=tk.LEFT)
+
+myLabel2_2= Label(bot_frame2, image=new_image_4, height=80, width=120, bg='#FFFFFF')
+myLabel2_2.pack(side=tk.LEFT)
+
+myLabel3_2 = Label(bot_frame2, text=" \n" + " \n", bg='#FFFFFF')
+myLabel3_2.pack()
+
+myLabel4_2 = Label(bot_frame2, text="Oxygen Pump", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4_2.pack(pady=15)
+
+switch_2 = customtkinter.CTkSwitch(bot_frame2, text="")     #eto yung switch pre
+switch_2.pack()
+
+#==================================bottom frame 3 info====================================
+
+my_img_5 = (Image.open("Images/pump.png"))
+
+resized_image_5= my_img_5.resize((70,70))
+new_image_5= ImageTk.PhotoImage(resized_image_5)
+
+myLabel1_3 = Label(bot_frame3, text=" \n" + " \n", bg='#FFFFFF')
+myLabel1_3.pack(padx=25, pady=15, side=tk.LEFT)
+
+myLabel2_3= Label(bot_frame3, image=new_image_5, height=80, width=120, bg='#FFFFFF')
+myLabel2_3.pack(side=tk.LEFT)
+
+myLabel3_3 = Label(bot_frame3, text=" \n" + " \n", bg='#FFFFFF')
+myLabel3_3.pack()
+
+myLabel4_3 = Label(bot_frame3, text="Peristaltic Pump", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+myLabel4_3.pack(pady=15)
+
+switch_3 = customtkinter.CTkSwitch(bot_frame3, text="")     #eto yung switch pre
+switch_3.pack()
+
+root.mainloop()
