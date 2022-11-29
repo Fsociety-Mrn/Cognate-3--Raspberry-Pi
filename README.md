@@ -50,3 +50,26 @@ pipreqs . --force
 ```shell
 pip install -r requirements.txt
 ```
+
+### AUTORUN APPLICATION on Raspberry Pi
+
+create a folder autorun and creates start.desktop
+
+```shell
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=<GUI Controller>
+Comment=
+Exec= python3 /location/python/script.py
+StartupNotify=false
+Terminal=true
+Hidden=false
+```
+
+after reboot paste this code on start.desktop
+```shell
+[Desktop Entry]
+Exec= python3 /location/python/script.py
+```
+
