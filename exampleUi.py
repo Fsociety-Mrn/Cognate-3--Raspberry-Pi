@@ -3,14 +3,37 @@ import customtkinter
 from PIL import ImageTk, Image
 import tkinter as tk
 
+import RPi.GPIO as GPIO
+
+from Firebase.firebase import firebaseReadChild,firebaseUpdateChild
+from Arduino.SerialCom import readTDS
+
+import os
+import time
+import Adafruit_DHT
+import threading
+
+
+sensor = Adafruit_DHT.DHT22
+
+# ********************** Pin Configuration ********************** #
+LED = 12
+Humid = 4
+FloatSwitchh = 16
+OxyPump = 8
+WaterPump = 11
+PeralPump = 18
+
+# ********* Sonar Sensor
+Trig = 13 # brown
+Echo = 15 # green
+
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
 class App(customtkinter.CTk):
-
-
 
     def __init__(self):
         super().__init__()
@@ -24,8 +47,8 @@ class App(customtkinter.CTk):
         self.iconbitmap('Images/hydroponic.ico')
         
          # =================== Center Form =================== #
-        window_height = 700
-        window_width = 1020
+        window_height = 800
+        window_width = 1030
 
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -44,18 +67,16 @@ class App(customtkinter.CTk):
         self.resizable(0,0)
         
         #==================================2 main frames top and bottom====================================
-
-
         
         self.top_frame = tk.Frame(master = self, width=1200, height=300, background="#F5F5F5")
         self.top_frame.pack(pady=30, padx=30, fill="both", expand=True)
         
         # self.top_frame.grid_rowconfigure(1, weight=1)
-        self.top_frame.grid_columnconfigure(1, weight=1)
+        # self.top_frame.grid_columnconfigure(1, weight=1)
         
         self.top_frame.pack_propagate("false")
 
-        self.bot_frame = tk.Frame(master = self, width=1200, height=100, background="#F5F5F5")
+        self.bot_frame = tk.Frame(master = self, width=1200, height=200, background="#F5F5F5")
         self.bot_frame.pack(padx=30)
 
         # self.bot_frame.grid_columnconfigure(1, weight=1)
@@ -102,8 +123,8 @@ class App(customtkinter.CTk):
         myLabel2.pack()
 
         #dito yung value na manggagaling sa sensor
-        myLabel3 = Label(self.top_frame1, text="00.0 °C", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        myLabel3.pack()
+        self.myLabel3 = Label(self.top_frame1, text="00.0 °C", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+        self.myLabel3.pack()
 
         myLabel4 = Label(self.top_frame1, text="Temperature", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4.pack() 
@@ -164,7 +185,7 @@ class App(customtkinter.CTk):
         self.bot_frame3.grid(row=3, column=2, padx=2, pady=4)
         self.bot_frame3.pack_propagate("false")
         
-        #==================================bottom frame 1 info====================================
+        #================================== Water Pump ====================================
 
         my_img_3 = (Image.open("Images/water-pump.png"))
 
@@ -186,7 +207,83 @@ class App(customtkinter.CTk):
         switch_1 = customtkinter.CTkSwitch(self.bot_frame1, text="")#eto yung switch pre
         switch_1.pack()
 
+        #================================== Oxygen Pump ====================================
 
+        my_img_4 = (Image.open("Images/oxygen.png"))
+
+        resized_image_4= my_img_4.resize((70,70))
+        self.new_image_4= ImageTk.PhotoImage(resized_image_4)
+
+        myLabel1_2 = Label(self.bot_frame2, text=" \n" + " \n", bg='#FFFFFF')
+        myLabel1_2.pack(padx=25, pady=15, side=tk.LEFT)
+
+        myLabel2_2= Label(self.bot_frame2, image=self.new_image_4, height=80, width=60, bg='#FFFFFF')
+        myLabel2_2.pack(side=tk.LEFT)
+
+        myLabel3_2 = Label(self.bot_frame2, text=" \n" + " \n", bg='#FFFFFF')
+        myLabel3_2.pack()
+
+        myLabel4_2 = Label(self.bot_frame2, text="Oxygen Pump", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+        myLabel4_2.pack(pady=15)
+
+        switch_2 = customtkinter.CTkSwitch(self.bot_frame2, text="")     #eto yung switch pre
+        switch_2.pack()
+        
+        #==================================bottom frame 3 info====================================
+
+        my_img_5 = (Image.open("Images/pump.png"))
+
+        resized_image_5= my_img_5.resize((70,70))
+        self.new_image_5= ImageTk.PhotoImage(resized_image_5)
+
+        myLabel1_3 = Label(self.bot_frame3, text=" \n" + " \n", bg='#FFFFFF')
+        myLabel1_3.pack(padx=25, pady=15, side=tk.LEFT)
+
+        myLabel2_3= Label(self.bot_frame3, image=self.new_image_5, height=80, width=60, bg='#FFFFFF')
+        myLabel2_3.pack(side=tk.LEFT)
+
+        self.myLabel3_3 = Label(self.bot_frame3, text=" \n" + " \n", bg='#FFFFFF')
+        self.myLabel3_3.pack()
+
+        myLabel4_3 = Label(self.bot_frame3, text="Peristaltic Pump", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
+        myLabel4_3.pack(pady=15)
+
+        switch_3 = customtkinter.CTkSwitch(self.bot_frame3, text="")     #eto yung switch pre
+        switch_3.pack()
+        
+    def setup(self):
+        GPIO.setwarnings(False) 
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(LED,GPIO.OUT) 
+        GPIO.setup(FloatSwitchh,GPIO.IN)
+        GPIO.setup(OxyPump,GPIO.OUT)
+        GPIO.setup(WaterPump,GPIO.OUT)
+        GPIO.setup(PeralPump,GPIO.OUT)
+    
+        GPIO.setup(Trig,GPIO.OUT)
+        GPIO.setup(Echo,GPIO.IN)
+        
+    # for humidty function
+    def Humidity(self):
+
+        humidity, temperature = Adafruit_DHT.read_retry(sensor, Humid)
+
+        if humidity is not None:
+    
+            temp = float('%.1f'%(temperature))
+            Tempera = str('%.1f'%((((temp - 32) * 5 )/ 9)*0.1)) + "°C"
+            firebaseUpdateChild("Humid","Humidity",Tempera)
+            
+            self.myLabel3.configure(text=Tempera)
+            
+        else:
+            firebaseUpdateChild("Humid","Humidity","unable to read")
+            self.myLabel3.configure(text="unable to read")
+        
 if __name__ == "__main__":
     app = App()
+    app.setup()
+    
+    threading.Thread(target=app.Humidity, args=()).start()
+    
     app.mainloop()
