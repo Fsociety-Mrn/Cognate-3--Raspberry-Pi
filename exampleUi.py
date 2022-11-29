@@ -42,9 +42,8 @@ class App(customtkinter.CTk):
         self.title("Hydroponics")
         # self.configure(bg='#FFFFFF')
         self.configure(bg='black')
-        # self.attributes('-fullscreen', True)
-        
-        self.iconbitmap('Images/hydroponic.ico')
+        self.attributes('-fullscreen', True)
+    
         
          # =================== Center Form =================== #
         window_height = 800
@@ -72,20 +71,20 @@ class App(customtkinter.CTk):
         self.top_frame.pack(pady=30, padx=30, fill="both", expand=True)
         
         # self.top_frame.grid_rowconfigure(1, weight=1)
-        # self.top_frame.grid_columnconfigure(1, weight=1)
+        self.top_frame.grid_columnconfigure(1, weight=1)
         
         self.top_frame.pack_propagate("false")
 
         self.bot_frame = tk.Frame(master = self, width=1200, height=200, background="#F5F5F5")
         self.bot_frame.pack(padx=30)
 
-        # self.bot_frame.grid_columnconfigure(1, weight=1)
+        self.bot_frame.grid_columnconfigure(1, weight=1)
         # self.bot_frame.grid_rowconfigure(1, weight=1)
         self.bot_frame.pack_propagate("false")
 
         #==================================3 top frames====================================
 
-        self.myLabel = Label(self.top_frame, text="Hydroponics", bg="#F5F5F5", fg='#3B3D40', font=("Open Sans Semibold", 12))
+        self.myLabel = Label(self.top_frame, text="Parameters", bg="#F5F5F5", fg='#3B3D40', font=("Open Sans Semibold", 12))
         self.myLabel.grid(pady=5, padx=10, sticky='w')  
         
         # self.myLabel = customtkinter.CTkLabel(self.top_frame, 
@@ -143,8 +142,8 @@ class App(customtkinter.CTk):
         myLabel2_2.pack()
 
         #dito yung value na manggagaling sa sensor
-        myLabel3_2 = Label(self.top_frame2, text="100 %", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        myLabel3_2.pack()
+        self.myLabel3_2 = Label(self.top_frame2, text="100 %", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+        self.myLabel3_2.pack()
 
         myLabel4_2 = Label(self.top_frame2, text="Water Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4_2.pack()
@@ -163,8 +162,8 @@ class App(customtkinter.CTk):
         myLabel2_3.pack()
 
         #dito yung value na manggagaling sa sensor
-        myLabel3_3 = Label(self.top_frame3, text="0 PPM", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        myLabel3_3.pack()
+        self.myLabel3_3 = Label(self.top_frame3, text="0 PPM", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+        self.myLabel3_3.pack()
 
         myLabel4_3 = Label(self.top_frame3, text="TDS Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4_3.pack()
@@ -272,18 +271,80 @@ class App(customtkinter.CTk):
     
             temp = float('%.1f'%(temperature))
             Tempera = str('%.1f'%((((temp - 32) * 5 )/ 9)*0.1)) + "°C"
-            firebaseUpdateChild("Humid","Humidity",Tempera)
+            #firebaseUpdateChild("Humid","Humidity",Tempera)
             
             self.myLabel3.configure(text=Tempera)
             
         else:
-            firebaseUpdateChild("Humid","Humidity","unable to read")
+            #firebaseUpdateChild("Humid","Humidity","unable to read")
             self.myLabel3.configure(text="unable to read")
+            
+        self.myLabel3.after(5,self.Humidity)
+    
+    def TDS(self):
+        self.myLabel3_3.configure(text=readTDS())
+        
+        
+        self.myLabel3_3.after(5,self.TDS)
+        # firebaseUpdateChild("TDS","data", readTDS())
+            
+    def waterLevel(self):
+    
+        GPIO.output(Trig, True)
+        # set Trigger after 0.01ms to LOW
+        time.sleep(1)
+        GPIO.output(Trig, False)
+
+        StartTime = time.time()
+        StopTime = time.time()
+ 
+        # save StartTime
+        while GPIO.input(Echo) == 0:
+            StartTime = time.time()
+ 
+        # save time of arrival
+        while GPIO.input(Echo) == 1:
+            StopTime = time.time()
+ 
+        # time difference between start and arrival
+        TimeElapsed = StopTime - StartTime
+    
+        # multiply with the sonic speed (34300 cm/s)
+        # and divide by 2, because there and back
+
+        cm = (TimeElapsed * 34300) / 2
+    
+        inches = float('%1.1f'%(cm / 2.54));
+
+        percent =(int(inches) * 100)/ 11;
+    
+        print(str(GPIO.input(FloatSwitchh)))
+   
+        if not GPIO.input(FloatSwitchh):
+            waterlvl = str(int(percent)) + " %"
+            #firebaseUpdateChild("waterLevel","level",waterlvl)
+            
+            self.myLabel3_2.configure(text=waterlvl)
+        else:
+            # firebaseUpdateChild("waterLevel","level","100%")
+            self.myLabel3_2.configure(text="100%")
+        
+        self.myLabel3_2.after(1,self.waterLevel)
+        # firebaseUpdateChild("waterLevel","level",str(int(100 - percent)) + "%")
         
 if __name__ == "__main__":
+    
     app = App()
+    
     app.setup()
     
+    #Temperature
     threading.Thread(target=app.Humidity, args=()).start()
+    
+    #TDS
+    threading.Thread(target=app.TDS, args=()).start()
+
+    #water level
+    threading.Thread(target=app.waterLevel, args=()).start()
     
     app.mainloop()
