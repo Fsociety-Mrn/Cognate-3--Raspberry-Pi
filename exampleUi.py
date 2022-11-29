@@ -122,8 +122,22 @@ class App(customtkinter.CTk):
         myLabel2.pack()
 
         #dito yung value na manggagaling sa sensor
-        self.myLabel3 = Label(self.top_frame1, text="00.0 °C", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        self.myLabel3.pack()
+        # self.myLabel3 = Label(self.top_frame1, 
+        #                       text="00.0 °C", 
+        #                       font=("Open Sans Bold", 30), 
+        #                       bg='#FFFFFF', 
+        #                       fg='#3B3D40'
+        #                       )
+        # self.myLabel3.pack()
+        
+        self.myLabel3 = customtkinter.CTkLabel(self.top_frame, 
+                                              text="00.0 °C",
+                                              bg_color="#FFFFFF",
+                                              font=("Open Sans Bold", 30),
+                                              text_color="#3B3D40"
+                                              )
+        self.myLabel3.grid(pady=5, padx=10, sticky='w') 
+        
 
         myLabel4 = Label(self.top_frame1, text="Temperature", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4.pack() 
@@ -142,8 +156,16 @@ class App(customtkinter.CTk):
         myLabel2_2.pack()
 
         #dito yung value na manggagaling sa sensor
-        self.myLabel3_2 = Label(self.top_frame2, text="100 %", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        self.myLabel3_2.pack()
+        # self.myLabel3_2 = Label(self.top_frame2, text="100 %", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+        # self.myLabel3_2.pack()
+        
+        self.myLabel3_2 = customtkinter.CTkLabel(self.top_frame, 
+                                              text="100 %",
+                                              bg_color="#FFFFFF",
+                                              font=("Open Sans Bold", 30),
+                                              text_color="#3B3D40"
+                                              )
+        self.myLabel3_2.grid(pady=5, padx=10, sticky='w')
 
         myLabel4_2 = Label(self.top_frame2, text="Water Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4_2.pack()
@@ -162,8 +184,16 @@ class App(customtkinter.CTk):
         myLabel2_3.pack()
 
         #dito yung value na manggagaling sa sensor
-        self.myLabel3_3 = Label(self.top_frame3, text="0 PPM", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
-        self.myLabel3_3.pack()
+        # self.myLabel3_3 = Label(self.top_frame3, text="0 PPM", font=("Open Sans Bold", 30), bg='#FFFFFF', fg='#3B3D40')
+        # self.myLabel3_3.pack()
+        
+        self.myLabel3_3 = customtkinter.CTkLabel(self.top_frame, 
+                                              text="0 PPM",
+                                              bg_color="#FFFFFF",
+                                              font=("Open Sans Bold", 30),
+                                              text_color="#3B3D40"
+                                              )
+        self.myLabel3_3.grid(pady=5, padx=10, sticky='w')
 
         myLabel4_3 = Label(self.top_frame3, text="TDS Level", font=("Open Sans Semibold", 10), bg='#FFFFFF', fg='#3B3D40')
         myLabel4_3.pack()
@@ -279,13 +309,11 @@ class App(customtkinter.CTk):
             #firebaseUpdateChild("Humid","Humidity","unable to read")
             self.myLabel3.configure(text="unable to read")
             
-        self.myLabel3.after(5,self.Humidity)
+        # self.myLabel3.after(5,self.Humidity)
     
     def TDS(self):
         self.myLabel3_3.configure(text=readTDS())
-        
-        
-        self.myLabel3_3.after(5,self.TDS)
+        # self.myLabel3_3.after(5,self.TDS)
         # firebaseUpdateChild("TDS","data", readTDS())
             
     def waterLevel(self):
@@ -329,7 +357,7 @@ class App(customtkinter.CTk):
             # firebaseUpdateChild("waterLevel","level","100%")
             self.myLabel3_2.configure(text="100%")
         
-        self.myLabel3_2.after(1,self.waterLevel)
+        # self.myLabel3_2.after(1,self.waterLevel)
         # firebaseUpdateChild("waterLevel","level",str(int(100 - percent)) + "%")
         
 if __name__ == "__main__":
