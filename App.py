@@ -196,4 +196,4 @@ myLabel4_3.pack(pady=15)
 switch_3 = customtkinter.CTkSwitch(bot_frame3, text="")     #eto yung switch pre
 switch_3.pack()
 
-root.mainloop()
+# root.mainloop()
