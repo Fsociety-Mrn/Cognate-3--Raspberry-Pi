@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 ### AUTORUN APPLICATION on Raspberry Pi
 
-create a folder autorun and creates start.desktop
+create a folder autostart and creates start.desktop
 
 ```shell
 [Desktop Entry]
@@ -64,7 +64,7 @@ Comment=
 Exec= python3 /location/python/script.py
 StartupNotify=false
 Terminal=true
-Hidden=false
+Hidden=false 
 ```
 
 after reboot paste this code on start.desktop

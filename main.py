@@ -12,6 +12,7 @@ import threading
 # ********************************************************* Hydroponics Backend ********************************************************* #
 # Sensor should be set to Adafruit_DHT.DHT11,
 # Adafruit_DHT.DHT22, or Adafruit_DHT.AM2302.
+
 sensor = Adafruit_DHT.DHT22
 
 # ********************** Pin Configuration ********************** #
@@ -102,7 +103,6 @@ def waterLevel():
         firebaseUpdateChild("waterLevel","level",str(int(percent)) + " %")
     else:
          firebaseUpdateChild("waterLevel","level","100%")   
-        # firebaseUpdateChild("waterLevel","level",str(int(100 - percent)) + "%")
     
 def oxygenPump():
     GPIO.output(OxyPump,firebaseReadChild("oxyPump","data"))
