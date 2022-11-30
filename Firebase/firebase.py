@@ -1,5 +1,10 @@
 import pyrebase 
 import os
+import requests
+
+timeout = 1
+
+
 # firebase API keys
 config = {
   "apiKey": os.environ.get("apiKey"),
@@ -16,14 +21,21 @@ def firebaseRead(keyName):
 
 # read the specific data with child
 def firebaseReadChild(keyName,valueName):
-    return db.child(keyName).child(valueName).get().val()
+    try:
+        requests.head("http://www.google.com/", timeout=timeout)
+        return db.child(keyName).child(valueName).get().val()
+    except equests.ConnectionError:
+        print("Walang Internet")
+        return False
+        
+    
 
 # update the current data
 def firebaseUpdate(keyName, value):
     try:
         db.child(keyName).set(value)
     except:
-        # print("may error")
+        print("Walang Internet")
         return False 
     finally:
         print(db.child(keyName).get().val())
@@ -32,14 +44,18 @@ def firebaseUpdate(keyName, value):
 
 def firebaseUpdateChild(keyName,keyChild,value):
     try:
+        requests.head("http://www.google.com/", timeout=timeout)
         db.child(keyName).child(keyChild).set(value)
+       
+    except requests.ConnectionError:
+        print("Walang Internet")
+        return False
     except:
-        return False 
+        return False
     finally:
         return True 
 
 # create data
 def firebaseCreate(keyName, value):
     return db.child(keyName).set(value)
-    
-     
+
