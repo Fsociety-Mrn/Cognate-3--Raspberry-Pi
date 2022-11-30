@@ -4,3 +4,4 @@
 /build
 /.env
 /check.py
+/__pycache__
