@@ -24,7 +24,7 @@ WaterPump = 11
 PeralPump = 18
 
 # ********* Sonar Sensor
-Trig = 13 # brown
+Trig = 13 # violet
 Echo = 15 # green
 
 # ********************** setup functions ********************** # 
