@@ -5,3 +5,6 @@
 /.env
 /check.py
 /__pycache__
+/test.py
+/requirements.txt
+/split.py
