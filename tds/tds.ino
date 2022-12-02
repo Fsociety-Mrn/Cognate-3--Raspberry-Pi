@@ -28,8 +28,7 @@ void setup()
  
 void loop()
 {
-  Serial.println(TDS() + " PPM," + String(tankLevel()));
-  delay(1000);
+  Serial.print(TDS() + " PPM");
 }
 
 String TDS(){
