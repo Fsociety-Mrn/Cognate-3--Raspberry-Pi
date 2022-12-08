@@ -22,6 +22,7 @@ const Homepage = () => {
   const [waterPump, setWaterPump] = React.useState(Boolean)
   const [oxyPump, setOxyPump] = React.useState(Boolean)
   const [peralPump, setPeralPump] = React.useState(Boolean)
+  const [test,setTest] = React.useState(0)
 
   React.useEffect(() => {
 
@@ -55,6 +56,9 @@ const Homepage = () => {
       setPeralPump(()=>e.child("data").val()) 
     })
 
+    
+    
+
   },[]);
 
   const waterpumpF = () =>{
@@ -75,7 +79,12 @@ const Homepage = () => {
     updateReal("peralPump",{
       data: !peralPump
     });
+
+    updateReal("waterPump",{
+      data: !peralPump
+    });
   }
+
   return (
 
     <div>
