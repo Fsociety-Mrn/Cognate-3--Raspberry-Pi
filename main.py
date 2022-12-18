@@ -19,13 +19,14 @@ sensor = Adafruit_DHT.DHT22
 LED = 12
 Humid = 4
 FloatSwitchh = 16
-OxyPump = 8
+
 WaterPump = 11
-PeralPump = 18
+OxyPump = 13
+PeralPump = 15
 
 # ********* Sonar Sensor
-Trig = 13 # violet
-Echo = 15 # green
+Trig = 38 # violet
+Echo = 40 # green
 
 # ********************** setup functions ********************** # 
 def setup():
