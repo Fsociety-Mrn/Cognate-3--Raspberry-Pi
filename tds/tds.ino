@@ -1,6 +1,10 @@
 #include <EEPROM.h>
 #include "GravityTDS.h"
- 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,20,4);
+
+
 #define TdsSensorPin A0
 GravityTDS gravityTds;
  
@@ -10,8 +14,9 @@ float temperature = 25,tdsValue = 0;
 int Trig = 2;
 int Echo = 3;
 
-int Float = 4; //float switch 1
- 
+int pump = 13; //float switch 1
+
+
 void setup()
 {
     Serial.begin(9600);
@@ -22,13 +27,22 @@ void setup()
     
     pinMode(Trig, OUTPUT);
     pinMode(Echo, INPUT);
-    
-    pinMode(Float, INPUT_PULLUP);
+    pinMode(A1, OUTPUT);
+    pinMode(pump, OUTPUT);
+
+    lcd.init(); 
+    lcd.backlight();
+
 }
  
 void loop()
 {
-  Serial.print(TDS() + " PPM");
+
+  lcd.clear();
+  lcd.print("inch: ");
+  lcd.print(tankLevel());
+  Serial.println(TDS() + " PPM");
+  delay(1000);
 }
 
 String TDS(){
@@ -57,13 +71,18 @@ int tankLevel(){
 
 //return an inches
   int inches = duration / 74 / 2;
+  int percent = inches * 100L/ 8L;
+  int spercent = 100L - percent;
 
-  if (!digitalRead(Float)){
-    return inches;
-  }else{
-    return 100;
+  Serial.println(inches);
+      
+  if (spercent < 30){
+    digitalWrite(pump,HIGH);
   }
-    // return inches;
+  
+  if (spercent > 85){
+    digitalWrite(pump,LOW);
+  }
+  
+  return spercent;
 }
-
-
