@@ -22,9 +22,9 @@ def firebaseRead(keyName):
 # read the specific data with child
 def firebaseReadChild(keyName,valueName):
     try:
-        requests.head("http://www.google.com/", timeout=timeout)
-        return db.child(keyName).child(valueName).get().val()
-    except equests.ConnectionError:
+        #requests.head("https://www.google.com/", timeout=timeout)
+        return bool(db.child(keyName).child(valueName).get().val())
+    except requests.ConnectionError:
         print("Walang Internet")
         return False
         
@@ -35,7 +35,7 @@ def firebaseUpdate(keyName, value):
     try:
         db.child(keyName).set(value)
     except:
-        print("Walang Internet")
+        #print("Walang Internet")
         return False 
     finally:
         print(db.child(keyName).get().val())
@@ -48,7 +48,7 @@ def firebaseUpdateChild(keyName,keyChild,value):
         db.child(keyName).child(keyChild).set(value)
        
     except requests.ConnectionError:
-        print("Walang Internet")
+        #print("Walang Internet")
         return False
     except:
         return False
@@ -58,4 +58,3 @@ def firebaseUpdateChild(keyName,keyChild,value):
 # create data
 def firebaseCreate(keyName, value):
     return db.child(keyName).set(value)
-
