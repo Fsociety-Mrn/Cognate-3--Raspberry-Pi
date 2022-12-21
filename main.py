@@ -24,6 +24,8 @@ WaterPump = 11
 OxyPump = 13
 PeralPump = 15
 
+pump = 36
+
 # ********* Sonar Sensor
 Trig = 38 # violet
 Echo = 40 # green
@@ -37,6 +39,8 @@ def setup():
     GPIO.setup(OxyPump,GPIO.OUT)
     GPIO.setup(WaterPump,GPIO.OUT)
     GPIO.setup(PeralPump,GPIO.OUT)
+    
+    GPIO.setup(pump,GPIO.OUT)
     
     GPIO.setup(Trig,GPIO.OUT)
     GPIO.setup(Echo,GPIO.IN)
@@ -67,11 +71,12 @@ def Led():
     # print(firebaseReadChild("LED","turnOn"))
 
 def waterLevel():
+    GPIO.output(Trig, GPIO.LOW)
+    GPIO.output(Trig, GPIO.HIGH)
     
-    GPIO.output(Trig, True)
-    # set Trigger after 0.01ms to LOW
-    time.sleep(1)
-    GPIO.output(Trig, False)
+    time.sleep(0.00001)
+    
+    GPIO.output(Trig, GPIO.LOW)
 
     StartTime = time.time()
     StopTime = time.time()
@@ -85,42 +90,45 @@ def waterLevel():
         StopTime = time.time()
  
     # time difference between start and arrival
-    TimeElapsed = StopTime - StartTime
+    pulse_duration = StopTime - StartTime
     
-    # multiply with the sonic speed (34300 cm/s)
-    # and divide by 2, because there and back
-
-    cm = (TimeElapsed * 34300) / 2
-    
-    inches = float('%1.1f'%(cm / 2.54));
-
-    percent =(int(inches) * 100)/ 11;
-    
-    print(str(GPIO.input(FloatSwitchh)))
-   
-    if not GPIO.input(FloatSwitchh):
-
-            
-        firebaseUpdateChild("waterLevel","level",str(int(percent)) + " %")
+    cm = round(pulse_duration * 17150, 2)
+    inches = int(cm / 2.54);
+    percent = int(inches*100/8)
+    percent = 100 - percent
+    print(percent)
+    if GPIO.input(FloatSwitchh):
+        firebaseUpdateChild("waterLevel","level","100%")
     else:
-         firebaseUpdateChild("waterLevel","level","100%")   
-    
+        firebaseUpdateChild("waterLevel","level",str(percent) + "%")
+
+def tdsLevel():
+
+    firebaseUpdateChild("TDS","data", str(readTDS()))
+
 def oxygenPump():
+  
     GPIO.output(OxyPump,firebaseReadChild("oxyPump","data"))
     
 def waterPump():
+
     GPIO.output(WaterPump,firebaseReadChild("waterPump","data"))
     
 def peralPump():
     # 20L of tubig
     data = firebaseReadChild("peralPump","data")
+    
+
     GPIO.output(PeralPump,data)
     
     if data == False:
         firebaseUpdateChild("waterPump","data",False)
         GPIO.output(WaterPump,GPIO.LOW)
-        time.sleep(100)
+        time.sleep(102)
         firebaseUpdateChild("peralPump","data",True)
+        firebaseUpdateChild("waterPump","data",True)
+        
+    
 
 
 # ********************** loop function ********************** #
@@ -131,12 +139,6 @@ def loop():
     
     #Humidity convert to  Temperature
     threading.Thread(target=Humidity, args=()).start()
-    
-    #TDS
-    threading.Thread(target=firebaseUpdateChild, args=("TDS","data", readTDS())).start()
-    
-    #water level
-    threading.Thread(target=waterLevel, args=()).start()
 
     #Oxygen Pump
     threading.Thread(target=oxygenPump, args=()).start()
@@ -146,6 +148,15 @@ def loop():
     
     #Peraltalstic Pump
     threading.Thread(target=peralPump, args=()).start()
+   
+    #TDS
+    threading.Thread(target=tdsLevel, args=()).start()
+    
+    #water level
+    threading.Thread(target=waterLevel, args=()).start()
+    
+    
+    
 
     return loop()
 
@@ -153,6 +164,3 @@ def loop():
 
 setup()
 loop()
-
-
- 
