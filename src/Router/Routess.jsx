@@ -22,8 +22,7 @@ const LoginRoutes = () => {
   return (
     <div>
       <Routes>
-
-        
+    
         <Route path="/Login" element={<Login/>}/>
         <Route path="*" element={<Navigate to="/Login"/>}/>
         

@@ -9,6 +9,7 @@ import {
 }from '@mui/material'
 import { LoginTextbox } from '../Components/CustomTextfield'
 import { Notificationnbar } from '../Components/Notificationbar'
+
 // Images or Icon
 import LOGO from '../images/LOGO.png'
 
@@ -128,7 +129,8 @@ const passwordChanged = e => {
     />
 
 
-      <Grid container
+      <Grid 
+      container
       direction="column"
       justifyContent="center"
       alignItems="center"
@@ -417,6 +419,7 @@ React.useEffect(()=>{
       window.removeEventListener("resize", () => setResponsiveness());
     };
   },[])
+
   return (
     <div>
     {!state ? <DesktopView /> : <MobileView />}
